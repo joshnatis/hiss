@@ -1,0 +1,34 @@
+body
+{
+	overflow: hidden;
+	margin: 0;
+	background-image: url("assets/icons/skygrid.png")
+}
+
+.icons { width: 20%; }
+
+.icons2 { width: 30%; }
+
+.grow {
+	z-index: 1;
+	background-color: #ccccff;
+	position: absolute;
+	padding: 0.5%;
+  	border-radius: 10px;
+  	border-top-left-radius: 0px;
+  	border: 2px solid black;
+  	height: 3.8em;
+  	width: 10%;
+  	float: left;
+  	transition: height 0.7s;
+  	-webkit-transition: height 0.7s;
+  	/*transition: width 1s;
+  	-webkit-transition: width 1s;*/
+  	text-align: center;
+ 	overflow: hidden;
+ 	opacity: 80%;
+}
+.grow:hover {
+  height: 23em;
+  opacity: 100%;
+}
