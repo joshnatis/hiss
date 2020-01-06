@@ -1,3 +1,4 @@
+//TODO CHANGE ALT IN IMAGES
 //colors
 let CLICKED_COLOR = [0,0,128,200];
 let ORIGINAL_COLOR = [153,204,255,200];
@@ -7,9 +8,9 @@ let PAUSED = false;
 let TRIP = false;
 let frames = 0;
 //organization for predefined content
-let numSpecialBalls = 6; //update this every time you add more content
+let numSpecialBalls = 7; //update this every time you add more content
 //physics
-let numBalls = 13;
+let numBalls = 14;
 let spring = 0.05;
 let gravity = 0.03;
 let friction = -0.7;
@@ -20,7 +21,10 @@ let blog;
 let about;
 let resources;
 let img_me;
-let img_hat;
+let img_hat; //
+let hat_mouth; //
+let hat_eyes; //
+let img_kernighan;
 //playable character
 let you;
 let sticky1;
@@ -45,6 +49,8 @@ function setup()
     balls[4] = new Ball(random(width), random(height), 130, 4, balls);
     //hat image
     balls[5] = new Ball(random(width), random(height), 120, 5, balls);
+    //brian kernighan img
+    balls[6] = new Ball(random(width), random(height), 110, 6, balls);
     //playable character
     you = new Ball(190, 40, 60, -1, balls);
 
@@ -86,20 +92,38 @@ function setup()
     img_me.mouseOver(hovered);
     img_me.mouseOut(unhovered);
 
+    //====
     img_hat = createImg("assets/icons/Tour_Guide_hat.png", "alt");
     img_hat.style("width", "8em");
     img_hat.mouseOver(hovered);
     img_hat.mouseOut(unhovered);
 
+    hat_mouth = createElement("h1", "__");
+    hat_mouth.style("width", "4em");
+    hat_mouth.mouseOver(hovered);
+    hat_mouth.mouseOut(unhovered);
+
+    hat_eyes = createElement("h1", "-  -");
+    hat_eyes.style("width", "4em");
+    hat_eyes.mouseOver(hovered);
+    hat_eyes.mouseOut(unhovered);
+    //====
+
     sticky1 = createImg("assets/icons/sticky1.png", "alt");
     sticky1.style("width", "4em");
+
+    img_kernighan = createImg("assets/icons/kernighan.png", "alt");
+    img_kernighan.style("width", "7em");
+
 }
 
 function draw() 
 {
+    //change gravity every so often to keep bubbles moving
     frames++;
     if(frames % 1000 == 0)
         gravity *= -1;
+
     //Position content within bubbles
 
     img_logo.position(
@@ -115,33 +139,43 @@ function draw()
         balls[2].y - balls[2].diameter/4.5);
 
     resources.position(
-        balls[3].x - balls[3].diameter/2.3, 
+        balls[3].x - balls[3].diameter/2.2, 
         balls[3].y - balls[3].diameter/8);
 
     img_me.position(
         balls[4].x - balls[4].diameter/2,
         balls[4].y - balls[4].diameter/2);
 
+    //====
     img_hat.position(
         balls[5].x - balls[5].diameter/2,
         balls[5].y - balls[5].diameter/1.5);
 
-    // up_arrow.position(window.innerWidth - 135, 0);
-    // down_arrow.position(window.innerWidth - 90, 0);
-    // left_arrow.position(window.innerWidth - 180, 0);
-    // right_arrow.position(window.innerWidth - 45, 0);
+    hat_mouth.position(
+        balls[5].x - 10,
+        balls[5].y - 10);
+
+    hat_eyes.position(
+        balls[5].x - 10,
+        balls[5].y - 30);
+    //====
+
+    img_kernighan.position(
+        balls[6].x - balls[6].diameter/2,
+        balls[6].y - balls[6].diameter/2);
 
     sticky1.position(you.x - 30, you.y -30);
 
+    let speed = 5;
     //move playable character
-    if(keyIsDown(87))
-        you.y -= 10;
-    else if(keyIsDown(65))
-        you.x -= 10;
-    else if(keyIsDown(83))
-        you.y += 10;
-    else if(keyIsDown(68))
-        you.x += 10;
+    if(keyIsDown(87)) //w
+        you.y -= speed;
+    else if(keyIsDown(65)) //a
+        you.x -= speed;
+    else if(keyIsDown(83)) //s
+        you.y += speed;
+    else if(keyIsDown(68)) //d
+        you.x += speed;
 
     // Actually move the bubbles and calls physics functions
     
@@ -225,8 +259,8 @@ class Ball
 
     display()
     {
-        //don't draw circles under images (ball 0 and ball 4)
-        if(this.id != 0 && this.id != 4)
+        //don't draw circles under images (ball 0, ball 4, ball 6)
+        if(this.id != 0 && this.id != 4 && this.id != 6)
         {
             fill(this.default_color);
             stroke(0);
@@ -249,6 +283,10 @@ function hovered()
             d = dist(mouseX, mouseY, balls[i].x, balls[i].y);
             r = balls[i].diameter / 2;
             
+            //make text bubbles more clickable
+            if(i == 1 || i == 2 || i == 3)
+                r += 10;
+
             if(d < r) {
                 balls[i].stopped = true;
                 balls[i].default_color = HOVERED_COLOR;
@@ -349,6 +387,9 @@ function keyPressed()
         all.forEach(thing => { thing.remove(); });
         all = selectAll('img');
         all.forEach(thing => { thing.remove(); });
+        all = selectAll('h1');
+        all.forEach(thing => { thing.remove(); });
+
         reset();        
         setup();
     }
