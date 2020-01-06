@@ -28,6 +28,7 @@ let img_kernighan;
 //playable character
 let you;
 let sticky1;
+let waves;
 
 //=================================================================
 
@@ -54,13 +55,13 @@ function setup()
     //playable character
     you = new Ball(190, 40, 60, -1, balls);
 
-    //create numBalls - numSpecialBalls random empty bubbles
+    //create (numBalls - numSpecialBalls) random empty bubbles
     for (let i = numSpecialBalls; i < numBalls; i++)
         balls[i] = new Ball(random(width), random(height), random(30, 200), i, balls);
 
     //Create content within balls
 
-    img_logo = createImg("assets/icons/hiss.png", "alt");
+    img_logo = createImg("assets/icons/hiss.png", "HISS logo");
     img_logo.style("width", "15em");
 
     blog = createA("https://josh8.com/blog", "Blog");
@@ -87,13 +88,13 @@ function setup()
     resources.mouseOver(hovered);
     resources.mouseOut(unhovered);
 
-    img_me = createImg("assets/icons/mes.png", "alt");
+    img_me = createImg("assets/icons/mes.png", "Me");
     img_me.style("width", "8em");
     img_me.mouseOver(hovered);
     img_me.mouseOut(unhovered);
 
     //====
-    img_hat = createImg("assets/icons/Tour_Guide_hat.png", "alt");
+    img_hat = createImg("assets/icons/hat.png", "Club Penguin Tour Guide Hat");
     img_hat.style("width", "8em");
     img_hat.mouseOver(hovered);
     img_hat.mouseOut(unhovered);
@@ -109,12 +110,14 @@ function setup()
     hat_eyes.mouseOut(unhovered);
     //====
 
-    sticky1 = createImg("assets/icons/sticky1.png", "alt");
-    sticky1.style("width", "4em");
-
-    img_kernighan = createImg("assets/icons/kernighan.png", "alt");
+    img_kernighan = createImg("assets/icons/kernighan.png", "Brian Kernighan");
     img_kernighan.style("width", "7em");
 
+    sticky1 = createImg("assets/icons/sticky1.png", "Stick Figure");
+    sticky1.style("width", "4em");
+    waves = createImg("assets/gifs/splash.gif", "waves");
+    waves.style("width", "4em");
+    waves.style("opacity", "60%");
 }
 
 function draw() 
@@ -164,9 +167,10 @@ function draw()
         balls[6].x - balls[6].diameter/2,
         balls[6].y - balls[6].diameter/2);
 
-    sticky1.position(you.x - 30, you.y -30);
+    sticky1.position(you.x - 30, you.y - 30);
+    waves.position(you.x - 30, you.y - 5);
 
-    let speed = 5;
+    let speed = 8;
     //move playable character
     if(keyIsDown(87)) //w
         you.y -= speed;
@@ -266,6 +270,10 @@ class Ball
             stroke(0);
             ellipse(this.x, this.y, this.diameter, this.diameter);
         }
+
+        // surfboard
+        fill(204, 101, 192, 127);
+        ellipse(you.x - 10, you.y + 30, 100, 10);
     }
 }
 
@@ -363,11 +371,11 @@ function keyPressed()
 
     //slow down bubbles
     else if(keyCode == DOWN_ARROW)
-       friction += 0.3;
+       friction += 0.1;
 
     //speed up bubbles   
     else if(keyCode == UP_ARROW)
-       friction -= 0.3;
+       friction -= 0.1;
     
     //flip gravity
     else if(keyCode == RETURN)
