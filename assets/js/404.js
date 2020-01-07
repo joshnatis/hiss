@@ -1,20 +1,26 @@
-let X_POSITION = window.innerWidth/5.3;
+let DEFAULT_X = window.innerWidth/5.3;
 let LINE_HEIGHT = 30;
+let PADDING = 16.5;
+
 let y;
 let maxInputLength;
+let cnv;
 
 let COLOR = "#33FF00";
 let STDOUT_COLOR = "#FFB000"
 let BG_COLOR = "#282828";
+let BUU_COLOR = "#FB607F"
+let ERROR_COLOR = "#FF0000";
 
 let lines = [];
+let files = ["blog", "about", "hat", "josh8", "resources"];
+let dotfiles = [".vimrc", ".bashrc"];
+let commands = ["help", "clear", "goto", "ls", "hello", "buu"];
 
 function setup() 
 {
 	let w = window.innerWidth;
 	let h = window.innerHeight;
-
-	let cnv;
 
 	//MOBILE RESIZING
     if(displayWidth <= 800) {
@@ -46,7 +52,7 @@ function createLine(y)
 
 	let inp = createInput('');
    		inp.elt.focus();
-		inp.position(X_POSITION, y);
+		inp.position(DEFAULT_X, y);
 
 	  	inp.style("width", "53em");
 	  	inp.style("padding-top", "0.4%");
@@ -76,7 +82,7 @@ function displayPrompt(y)
   	p.style("padding-bottom", "0.4%");
 	p.style("font-size", "1.3em");
 	p.style("font-family", "monospace");
-	p.position(X_POSITION - 20, y - 16.5);
+	p.position(DEFAULT_X - 20, y - PADDING);
 }
 
 function draw()
@@ -92,7 +98,7 @@ function keyPressed()
 
     	if(content != "clear") {
     		lines[lines.length - 1].attribute('disabled', '');
-    		incrementLine();
+    		stdnewline();
     		createLine(y);
     	}
     }
@@ -119,42 +125,94 @@ function keyPressed()
 function processInput(content)
 {
 	if(content == "ls")
-    	alert("blog, about, and other cool things");
+    	ls(files);
+
     else if(content == "help")
-    	stdout("whoa, man...", y + LINE_HEIGHT - 16.5);
+    {
+    	stdout("Welcome to josh, the OSC Josh Shell version 1.0.");
+    	stdout("Available commands: ");
+    	ls(commands);
+   	}
+
+    else if(content.substring(0,4) == "man " || content == "man")
+    	stdout("Nice try :P, go to 'help' instead.");
+
+    else if(content.toLowerCase() == "hi" || content.toLowerCase() == "hello")
+    	stdout("Hello!");
+
     else if(content == "clear")
     	reset();
+
+   	else if(content.substr(0,5) == "goto ")
+   	{
+   		if(files.includes(content.substr(6)))
+   		{
+   			alert(content.substr(6));
+   			window.open("https://josh8.com/" + content.substr(6));
+   		}
+   		alert("uh oh!");
+   	}
+
     else if(content == "blog")
     	window.open("https://josh8.com/blog", "_self");
+
     else
-    	console.log(lines[lines.length - 1].value());
+    {
+    	let y_shorthand = y + LINE_HEIGHT - PADDING;
+    	let failed_cmd = (lines[lines.length - 1].value()).substring(0, 60);
+    	let word = stdout("Sorry, ", y_shorthand, DEFAULT_X, false);
+    	let word2 = stdout(failed_cmd, y_shorthand, word.position().x + word.size().width + 10, false, ERROR_COLOR);
+    	stdout(" is not a valid command.", y_shorthand, word2.position().x + word2.size().width + 10);
+    }
 }
 
-function stdout(content, y, x=X_POSITION)
+function stdout(content, y_in=(y + LINE_HEIGHT - PADDING), x_in=DEFAULT_X, newline=true, color_in=STDOUT_COLOR)
 {
-	incrementLine();
+	if(newline)
+		stdnewline();
+
 	let p = createP(content);
-	p.style("color", STDOUT_COLOR);
+	p.style("color", color_in);
 	p.style("padding-top", "0.4%");
   	p.style("padding-bottom", "0.4%");
 	p.style("font-size", "1.3em");
 	p.style("font-family", "monospace");
 
-	p.position(x, y);
+	p.position(x_in, y_in);
 
+	return p;
+}
+
+function ls(files, flag="")
+{
+	let spacer = 40;
+	let right_margin = 100;
+
+	let local_x = DEFAULT_X;
+	for(let i = 0; i < files.length; ++i)
+	{
+		let word = stdout(files[i], y + LINE_HEIGHT - PADDING, local_x, false, BUU_COLOR); //make me pure...
+		local_x = word.position().x + word.size().width + spacer; //x coord of start of new word
+
+		let allowed_x_pos = cnv.position().x + width - right_margin;
+		// continue printing on new line if not enough space
+		if(local_x > allowed_x_pos && (i != files.length - 1)) { //make sure this isn't the last element
+			local_x = DEFAULT_X;
+			stdnewline();
+		}
+	}
+	
+	stdnewline();
 }
 
 function reset()
 {
-	X_POSITION = window.innerWidth/5.3;
-	LINE_HEIGHT = 30;
 	y = floor(window.innerHeight / 6.3);
 	clear();
-
 	setup();
 }
 
-function incrementLine()
+function stdnewline()
 {
 	y += LINE_HEIGHT;
 }
