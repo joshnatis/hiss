@@ -1,4 +1,3 @@
-//TODO CHANGE ALT IN IMAGES
 //colors
 let CLICKED_COLOR = [0,0,128,200];
 let ORIGINAL_COLOR = [153,204,255,200];
@@ -9,6 +8,7 @@ let TRIP = false;
 let frames = 0;
 //organization for predefined content
 let numSpecialBalls = 7; //update this every time you add more content
+let specialBalls = []; //hold all balls with content (to address them all at once)
 //physics
 let numBalls = 14;
 let spring = 0.05;
@@ -36,88 +36,86 @@ function setup()
 {
     createCanvas(window.innerWidth, window.innerHeight);
 
-    //Create Balls (custom and random)
+    //Create 'special' bubbles with content
 
     //hiss image
     balls[0] = new Ball(random(width), random(height), 245, 0, balls);
+    img_logo = createImg("assets/icons/hiss.png", "HISS logo");
+        img_logo.style("width", "15em");
+        specialBalls.push(img_logo);
+
     //blog
     balls[1] = new Ball(random(width), random(height), 280, 1, balls);
+    blog = createA("https://josh8.com/blog", "Blog");
+        blog.style("text-decoration", "none");
+        blog.style("color", "black");
+        blog.style("font-size", "5em");
+        blog.style("font-family", "Georgia");
+        specialBalls.push(blog);
+
     //about
     balls[2] = new Ball(random(width), random(height), 270, 2, balls);
+    about = createA("https://josh8.com/whom", "About");
+        about.style("text-decoration", "none");
+        about.style("color", "black");
+        about.style("font-size", "5em");
+        about.style("font-family", "Georgia");
+        specialBalls.push(about);
+
     //resources
     balls[3] = new Ball(random(width), random(height), 200, 3, balls);
+    resources = createA("https://josh8.com/home", "Resources");
+        resources.style("text-decoration", "none");
+        resources.style("color", "black");
+        resources.style("font-size", "2.5em");
+        resources.style("font-family", "Georgia");
+        specialBalls.push(resources);
+
     //me image
     balls[4] = new Ball(random(width), random(height), 130, 4, balls);
-    //hat image
+    img_me = createImg("assets/icons/mes.png", "Me");
+        img_me.style("width", "8em");
+        specialBalls.push(img_me);
+
+    //hat
     balls[5] = new Ball(random(width), random(height), 120, 5, balls);
+    img_hat = createImg("assets/icons/hat.png", "Club Penguin Tour Guide Hat");
+        img_hat.style("width", "8em");
+        specialBalls.push(img_hat);
+    hat_mouth = createElement("h1", "__");
+        hat_mouth.style("width", "4em");
+        specialBalls.push(hat_mouth);
+    hat_eyes = createElement("h1", "-  -");
+        hat_eyes.style("width", "4em");
+        specialBalls.push(hat_eyes);
+
     //brian kernighan img
     balls[6] = new Ball(random(width), random(height), 110, 6, balls);
-    //playable character
-    you = new Ball(190, 40, 60, -1, balls);
+    img_kernighan = createImg("assets/icons/kernighan.png", "Brian Kernighan");
+        img_kernighan.style("width", "7em");
+        specialBalls.push(img_kernighan);
 
-    //create (numBalls - numSpecialBalls) random empty bubbles
+    //playable character/accessories
+    you = new Ball(190, 40, 60, -1, balls);
+    sticky1 = createImg("assets/icons/sticky1.png", "Stick Figure");
+        sticky1.style("width", "4em");
+        specialBalls.push(sticky1);
+    waves = createImg("assets/gifs/splash.gif", "waves");
+        waves.style("width", "4em");
+        waves.style("opacity", "60%");
+        specialBalls.push(waves);
+
+    //Enable hovering functionality for each special item
+    specialBalls.forEach(ball => 
+    {
+        ball.mouseOver(hovered);
+        ball.mouseOut(unhovered);
+    });
+
+
+    //Create (numBalls - numSpecialBalls) random empty bubbles
     for (let i = numSpecialBalls; i < numBalls; i++)
         balls[i] = new Ball(random(width), random(height), random(30, 200), i, balls);
-
-    //Create content within balls
-
-    img_logo = createImg("assets/icons/hiss.png", "HISS logo");
-    img_logo.style("width", "15em");
-
-    blog = createA("https://josh8.com/blog", "Blog");
-    blog.style("text-decoration", "none");
-    blog.style("color", "black");
-    blog.style("font-size", "5em");
-    blog.style("font-family", "Georgia");
-    blog.mouseOver(hovered);
-    blog.mouseOut(unhovered);
-
-    about = createA("https://josh8.com/whom", "About");
-    about.style("text-decoration", "none");
-    about.style("color", "black");
-    about.style("font-size", "5em");
-    about.style("font-family", "Georgia");
-    about.mouseOver(hovered);
-    about.mouseOut(unhovered);
-
-    resources = createA("https://josh8.com/home", "Resources");
-    resources.style("text-decoration", "none");
-    resources.style("color", "black");
-    resources.style("font-size", "2.5em");
-    resources.style("font-family", "Georgia");
-    resources.mouseOver(hovered);
-    resources.mouseOut(unhovered);
-
-    img_me = createImg("assets/icons/mes.png", "Me");
-    img_me.style("width", "8em");
-    img_me.mouseOver(hovered);
-    img_me.mouseOut(unhovered);
-
-    //====
-    img_hat = createImg("assets/icons/hat.png", "Club Penguin Tour Guide Hat");
-    img_hat.style("width", "8em");
-    img_hat.mouseOver(hovered);
-    img_hat.mouseOut(unhovered);
-
-    hat_mouth = createElement("h1", "__");
-    hat_mouth.style("width", "4em");
-    hat_mouth.mouseOver(hovered);
-    hat_mouth.mouseOut(unhovered);
-
-    hat_eyes = createElement("h1", "-  -");
-    hat_eyes.style("width", "4em");
-    hat_eyes.mouseOver(hovered);
-    hat_eyes.mouseOut(unhovered);
-    //====
-
-    img_kernighan = createImg("assets/icons/kernighan.png", "Brian Kernighan");
-    img_kernighan.style("width", "7em");
-
-    sticky1 = createImg("assets/icons/sticky1.png", "Stick Figure");
-    sticky1.style("width", "4em");
-    waves = createImg("assets/gifs/splash.gif", "waves");
-    waves.style("width", "4em");
-    waves.style("opacity", "60%");
 }
 
 function draw() 
@@ -149,19 +147,15 @@ function draw()
         balls[4].x - balls[4].diameter/2,
         balls[4].y - balls[4].diameter/2);
 
-    //====
     img_hat.position(
         balls[5].x - balls[5].diameter/2,
         balls[5].y - balls[5].diameter/1.5);
-
     hat_mouth.position(
         balls[5].x - 10,
         balls[5].y - 10);
-
     hat_eyes.position(
         balls[5].x - 10,
         balls[5].y - 30);
-    //====
 
     img_kernighan.position(
         balls[6].x - balls[6].diameter/2,
@@ -170,8 +164,8 @@ function draw()
     sticky1.position(you.x - 30, you.y - 30);
     waves.position(you.x - 30, you.y - 5);
 
-    let speed = 8;
     //move playable character
+    let speed = 8;
     if(keyIsDown(87)) //w
         you.y -= speed;
     else if(keyIsDown(65)) //a
@@ -182,8 +176,7 @@ function draw()
         you.x += speed;
 
     // Actually move the bubbles and calls physics functions
-    
-    you.collide();
+    you.collide(); //collisions for playable character
 
     balls.forEach(ball => 
     {
@@ -291,10 +284,11 @@ function hovered()
             d = dist(mouseX, mouseY, balls[i].x, balls[i].y);
             r = balls[i].diameter / 2;
             
-            //make text bubbles more clickable
+            //increase radius to make text bubbles more clickable
             if(i == 1 || i == 2 || i == 3)
                 r += 10;
 
+            //if cursor is within radius of circle (i.e. if hovered over)
             if(d < r) {
                 balls[i].stopped = true;
                 balls[i].default_color = HOVERED_COLOR;
@@ -322,11 +316,7 @@ function mousePressed()
         d = dist(mouseX, mouseY, balls[i].x, balls[i].y);
         r = balls[i].diameter/2;
 
-        /*
-         * if the distance between a ball's (x,y) and mouse position is
-         * less than its radius, the mouse is within the ball
-         * (i.e, a ball was clicked)
-         */
+        //if cursor is within radius of circle (i.e. if clicked on)
         if(d < r)
         {
             if(!balls[i].clicked) {
@@ -351,7 +341,7 @@ function mousePressed()
                 window.open("https://josh8.com/hat", "_self");
         }
     }
-    return false; //disable default click behavior
+    return false; //disable browser default click behavior
 }
 
 function keyPressed() 
@@ -370,12 +360,16 @@ function keyPressed()
     }
 
     //slow down bubbles
-    else if(keyCode == DOWN_ARROW)
-       friction += 0.1;
+    else if(keyCode == DOWN_ARROW) {
+        if(friction < 1.2)
+            friction += 0.1;
+    }
 
     //speed up bubbles   
-    else if(keyCode == UP_ARROW)
-       friction -= 0.1;
+    else if(keyCode == UP_ARROW) {
+        if(friction > -1.2)
+            friction -= 0.1;
+    }
     
     //flip gravity
     else if(keyCode == RETURN)
@@ -391,22 +385,18 @@ function keyPressed()
     else if (keyCode == ESCAPE)
     {
         //remove all elements then restart
-        let all = selectAll('a');
-        all.forEach(thing => { thing.remove(); });
-        all = selectAll('img');
-        all.forEach(thing => { thing.remove(); });
-        all = selectAll('h1');
-        all.forEach(thing => { thing.remove(); });
+        specialBalls.forEach(ball => {
+            ball.remove();
+        });
 
         reset();        
         setup();
     }
 
-    //comma
-    else if(keyCode == 188)
+    else if(keyCode == 188)  //comma
         TRIP=true;
-    //period
-    else if(keyCode == 190)
+
+    else if(keyCode == 190) //period
         TRIP=false;
 }
 

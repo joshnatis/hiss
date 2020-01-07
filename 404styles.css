@@ -1,0 +1,18 @@
+body
+{
+	overflow: hidden;
+	margin: 0;
+	background-image: url("assets/icons/skygrid.png");
+	/*pointer-events:*/
+}
+
+@media screen and (max-width: 800px) {
+	body {overflow-x: hidden; max-width: 100%;}
+	canvas {margin-left: -11%; margin-top: -11%; width: 100%;}
+}
+/*
+@media screen and (max-width: 800px) {
+	body {overflow-x: hidden;}
+	canvas {margin-left: -11%; margin-top: -11%;}
+}
+*/
