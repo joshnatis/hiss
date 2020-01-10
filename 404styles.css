@@ -9,6 +9,6 @@ body
 
 
 @media screen and (max-width: 800px) {
-	body {overflow-x: hidden; max-width: 100%;}
+	body {overflow-x: hidden; max-width: 100%; pointer-events: auto}
 	canvas {margin-left: -11%; margin-top: -11%; width: 100%;}
 }
