@@ -1,8 +1,6 @@
-# hiss
-
 ## The `Hunter Open Source Club` HIStorical Society
 
-Meow. More to be written soon :-).
+HISS. Meow. More to be written soon :-).
 
 ## Site Directory
 
