@@ -172,9 +172,9 @@ function processInput(content)
 	else if(content == "clear")
     	reset();
 
-	else if(content.substr(0,5) == "goto ")
+	else if(content.substring(0,5) == "goto ")
    	{
-   		window.open("https://josh8.com/" + content.substr(5), "_self");
+   		window.open("https://josh8.com/" + content.substring(5), "_self");
    	}
 
 	else if(content.substring(0,4) == "man " || content == "man")
@@ -202,10 +202,25 @@ function processInput(content)
 	else
 	{
 		let y_pos = y + LINE_HEIGHT - PADDING;
-		let failed_cmd = (lines[lines.length - 1].value()).substring(0, 60);
+
+		let max_allowable_chars;
+		
+		if(displayWidth <= 800)
+			max_allowable_chars = 17;
+		else
+			max_allowable_chars = 60;
+
+		let failed_cmd = (lines[lines.length - 1].value()).substring(0, max_allowable_chars);
 		let word = stdout("Sorry, ", y_pos, DEFAULT_X, false);
 		let word2 = stdout(failed_cmd, y_pos, next_word_xpos(word), false, ERROR_COLOR);
-		stdout(" is not a valid command.", y_pos, next_word_xpos(word2));
+
+		if(displayWidth <= 800)
+		{
+			stdout(" is not a valid command.", y_pos + LINE_HEIGHT - PADDING, DEFAULT_X);
+			y += LINE_HEIGHT - PADDING;
+		}
+		else
+			stdout(" is not a valid command.", y_pos, next_word_xpos(word2));
 	}
 }
 
@@ -255,7 +270,8 @@ function ls(files, flag="")
 
 function restartAtTop()
 {
-	//delete all elements
+	let last_cmd_cache = lines[lines.length - 2]; //please dont ask :D haha...
+
 	let text = selectAll('p');
 	text.forEach(t => {
         t.remove();
@@ -264,7 +280,9 @@ function restartAtTop()
     inputs.forEach(i => {
     	i.remove();
     });
-	
+    
+    lines.push(last_cmd_cache);
+
 	//clear screen and reset defaults
 	setup();
 
