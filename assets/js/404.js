@@ -1,5 +1,5 @@
 const DEFAULT_X = window.innerWidth/5.3;
-const LINE_HEIGHT = 30;
+let LINE_HEIGHT = 30;
 const PADDING = 16.5;
 const WORD_SPACER = 10;
 let JSMODE = false;
@@ -20,6 +20,7 @@ let commands = ["help", "clear", "goto", "ls", "hello", "buu", "js"];
 let lines = [];
 let output_log = [];
 
+
 function setup()
 {
 	let w = window.innerWidth;
@@ -31,11 +32,15 @@ function setup()
 		cnv.position(40,40);
 		cnv.style("overflow-y", "hidden");
 		maxInputLength = 27;
+		LINE_HEIGHT = 45;
+		y = floor(window.innerHeight / 15); //begin first line at this height
 	}
+	//LE COMPUTER
 	else {
-	    cnv = createCanvas(w/1.46, h/1.36);
-	    cnv.position(w/6.4,h/7.5);
-	    maxInputLength = 87;
+		cnv = createCanvas(w/1.46, h/1.36);
+		cnv.position(w/6.4,h/7.5);
+		maxInputLength = 87;
+		y = floor(window.innerHeight / 6.3); //begin first line at this height
 	}
 
 	cnv.style("border-radius", "4px");
@@ -45,11 +50,12 @@ function setup()
 	cnv.style("box-shadow", "10px 10px 5px #141414")
 	background(BG_COLOR);
 
-	y = floor(window.innerHeight / 6.3); //begin first line at this height
-	//stdout("404: Page Not Found.", y + LINE_HEIGHT - PADDING, DEFAULT_X, false, STDOUT_COLOR);
-	//stdnewline();
-	if(lines.length == 0)
+	if(lines.length == 0) {
 		createLine(y);
+
+		if(output_log.length == 0)
+			lines[lines.length - 1].elt.value = "help";
+	}
 }
 
 function createLine(y, prompt="$ ") 
@@ -57,22 +63,22 @@ function createLine(y, prompt="$ ")
 	displayPrompt(y, prompt);
 
 	let inp = createInput("");
-   		inp.elt.focus();
-		inp.position(DEFAULT_X, y);
+	inp.elt.focus();
+	inp.position(DEFAULT_X, y);
 
-	  	inp.style("width", "53em");
-	  	inp.style("padding-top", "0.4%");
-	  	inp.style("padding-bottom", "0.4%");
-	  	inp.style("font-size", "1.3em");
-	  	inp.style("outline", "none");
-	  	inp.style("resize", "none");
-	  	inp.style("color", INPUT_COLOR);
-	  	inp.style("background-color", "transparent");
-	  	inp.style("border", "none");
-	  	inp.style("font-family", "monospace");
+		inp.style("width", "53em");
+		inp.style("padding-top", "0.4%");
+		inp.style("padding-bottom", "0.4%");
+		inp.style("font-size", "1.3em");
+		inp.style("outline", "none");
+		inp.style("resize", "none");
+		inp.style("color", INPUT_COLOR);
+		inp.style("background-color", "transparent");
+		inp.style("border", "none");
+		inp.style("font-family", "monospace");
 
-	  	inp.attribute("autocomplete", "off");
-	  	inp.attribute("autocorrect", "off");
+		inp.attribute("autocomplete", "off");
+		inp.attribute("autocorrect", "off");
 		inp.attribute("autocapitalize", "off");
 		inp.attribute("spellcheck", "off");
 		inp.attribute("maxlength", maxInputLength);
@@ -85,7 +91,7 @@ function displayPrompt(y, prompt)
 	let p = createP(prompt);
 		p.style("color", INPUT_COLOR);
 		p.style("padding-top", "0.4%");
-	  	p.style("padding-bottom", "0.4%");
+		p.style("padding-bottom", "0.4%");
 		p.style("font-size", "1.3em");
 		p.style("font-family", "monospace");
 	p.position(DEFAULT_X - 20, y - PADDING); //position prompt behind input
@@ -106,9 +112,8 @@ function keyPressed()
 		output_log.push(content);
 
 		if(JSMODE) {
-			if(content == "done") {
+			if(content == "done")
 				JSMODE = false;
-			}
 			else {
 				try {
 					eval(content);
@@ -126,26 +131,26 @@ function keyPressed()
     		lines[lines.length - 1].attribute('disabled', '');
     		stdnewline();
     		createLine(y);
-    	}
-    }
+		}
+	}
 
 	//KEYBOARD SHORTCUTS
 
 	if(keyCode == 85) { //u
-    		if(keyIsDown(CONTROL))
-    			lines[lines.length - 1].elt.value = "";
-    	} //CTRL U - clear the line
+		if(keyIsDown(CONTROL))
+    	lines[lines.length - 1].elt.value = "";
+	} //CTRL U - clear the line
 
 	if(keyCode == 76) { //l
-    		if(keyIsDown(CONTROL))
-    			reset();
-    	} //CTRL L - clears the screen
+		if(keyIsDown(CONTROL))
+			reset();
+	} //CTRL L - clears the screen
 
-    	if(keyCode == UP_ARROW)
-    	{
-    		if(lines.length >= 2)
-    			lines[lines.length - 1].elt.value = lines[lines.length - 2].value();
-    	} //UP - fills with previous command
+	if(keyCode == UP_ARROW)
+	{
+		if(lines.length >= 2)
+			lines[lines.length - 1].elt.value = lines[lines.length - 2].value();
+	} //UP - fills with previous command
 }
 
 function processInput(content)
@@ -155,11 +160,13 @@ function processInput(content)
 
     else if(content == "help")
     {
-	    	let a = stdout("Welcome to ");
-	    	let b = stdout_word("josh", next_word_xpos(a), "blue");
-			stdout(", the OSC JOsh SHell version 1.0", y - PADDING, next_word_xpos(b) - WORD_SPACER, false, STDOUT_COLOR);
-	    	stdout("Available commands: ");
-	    	ls(commands);
+    	stdout("Welcome to josh, the OSC JOsh SHell version 1.0");
+	    //let a = stdout("Welcome to ");
+	    //let b = stdout_word("josh", next_word_xpos(a), "blue");
+		//stdout(", the OSC JOsh SHell version 1.0", y - PADDING, next_word_xpos(b) - WORD_SPACER, false, STDOUT_COLOR);
+
+	    stdout("Available commands: ");
+	    ls(commands);
 	}
 
 	else if(content == "clear")

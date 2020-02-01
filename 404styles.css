@@ -6,9 +6,88 @@ body
 	pointer-events: none;
 }
 
+#preloadbg
+{
+	background-image: url("assets/icons/skygrid.png");
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	z-index: 1;
+}
+
+#welcome404
+{
+	background: linear-gradient(145deg, #b8b8b8, #dadada);
+	box-shadow:  30px 30px 60px #adadad, 
+             -30px -30px 60px #ebebeb, 10px 10px grey;
+	border-radius: 50%;
+	width: 30em;
+	height: 30em;
+	text-align: center;
+	position:relative;
+	z-index: 1;
+	margin: 0 auto;
+	opacity: 80%;
+	cursor: pointer;
+	margin-top: 8.7%;
+
+	-webkit-animation: fadein 2s; /* Safari, Chrome and Opera > 12.1 */
+	-moz-animation: fadein 2s; /* Firefox < 16 */
+	-ms-animation: fadein 2s; /* Internet Explorer */
+	-o-animation: fadein 2s; /* Opera < 12.1 */
+	animation: fadein 2s;
+}
+
+#text404
+{
+	font-family: "Georgia", Times, Sans-serif;
+	font-size: 3em;
+	text-shadow: 2px 2px rgba(255,0,0,0.5);
+	margin-top: 0%;
+}
+
+#paak
+{
+	margin-top: 8%;
+	margin-left: 4%;
+}
 
 
-@media screen and (max-width: 800px) {
+
+@media screen and (max-width: 800px)
+{
 	body {overflow-x: hidden; max-width: 100%; pointer-events: auto}
 	canvas {margin-left: -11%; margin-top: -11%; width: 100%;}
+	#welcome404 {width: 20em; height: 20em; margin-top: 15%;}
+	#text404 {font-size: 2em;}
+	#paak {width: 50%;}
+}
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 0.8; }
+}
+
+/* Firefox < 16 */
+@-moz-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 0.8; }
+}
+
+/* Safari, Chrome and Opera > 12.1 */
+@-webkit-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 0.8; }
+}
+
+/* Internet Explorer */
+@-ms-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 0.8; }
+}
+
+/* Opera < 12.1 */
+@-o-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 0.8; }
 }
